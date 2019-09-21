@@ -25,13 +25,36 @@ def draw(x,y,z,r):
     lcd.circle(cx-x, cy+y, r, fillcolor=0x0000ff)
   
 
+x,y,z = 0,10,0
+vx,vy,vz = 0,0,0
+eL = 100
+# k / m
+km = 0.01
+dump = 0.01
+import utime
+last = utime.ticks_ms()
 
 while True:
+  now = utime.ticks_ms()
+  dt = (now - last)/10
+  last = now
+  
+  ax,ay,az = imu0.acceleration
+  L = (x**2+y**2+z**2)**0.5
+  ax -= vx*dump
+  ay -= vy*dump
+  az -= vz*dump
+  if L > eL:
+    F = -km*(L-eL) / L
+    ax += x*F
+    ay += y*F
+    az += z*F
+  vx += ax*dt
+  vy += ay*dt
+  vz += az*dt
+  x += vx*dt
+  y += vy*dt
+  z += vz*dt
   lcd.clear()
-  x,y,z = imu0.acceleration
-  r = 100 / (x*x + y*y + z*z)**0.5
-  x *= r
-  y *= r
-  z *= r
   draw(x,y,z,20)
   wait_ms(2)
