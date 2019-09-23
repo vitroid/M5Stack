@@ -3,9 +3,10 @@
 // Uses MPU9250 by hideakitai instead of M5Stack std lib
 // because latter does not work with M5 gray
 
-#include "MPU9250.h"
+//#include "MPU9250.h"
+#include "utility/MPU9250.h"
 
-MPU9250 mpu;
+MPU9250 IMU;
 TFT_eSprite img = TFT_eSprite(&M5.Lcd);  // Create Sprite object "img" with pointer to "tft" object
 
 int sevenseg[] = {0b1110111, 0b0010010, 0b1011101, 0b1011011, 0b0111010, 0b1101011,0b0101111,0b1010010,0b1111111,0b1111010};
@@ -19,7 +20,7 @@ void setup() {
     Serial.begin(115200);
     Wire.begin();
     delay(200);
-    mpu.setup();
+    //byte c = IMU.readByte(MPU9250_ADDRESS, WHO_AM_I_MPU9250);
     img.setColorDepth(8);
     img.createSprite(320,240);
 }
@@ -97,11 +98,12 @@ int orange = 0xfbe4;
 
 void loop() {
   // put your main code here, to run repeatedly:
-  mpu.update();
-  
-  float x = mpu.getAcc(0);
-  float y = mpu.getAcc(1);
-  float z = mpu.getAcc(2);
+  if (IMU.readByte(MPU9250_ADDRESS, INT_STATUS) & 0x01){
+    IMU.readAccelData(IMU.accelCount);  // Read the x/y/z adc values
+    IMU.getAres();
+  float x = (float)IMU.accelCount[0]*IMU.aRes;
+  float y = (float)IMU.accelCount[1]*IMU.aRes;
+  float z = (float)IMU.accelCount[2]*IMU.aRes;
   float br = sqrt(x*x+y*y);
   int bx = (int)(x/br*100);
   int by = (int)(y/br*100);
@@ -238,5 +240,6 @@ void loop() {
   fillPoly2(10, xx, yy, 0x0);
   img.pushSprite(0, 0);
   //M5.update();
-  delay(100);
+  }
+  delay(30);
 }
