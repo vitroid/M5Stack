@@ -229,6 +229,9 @@ void sendImage() {
         size_t offset = 0;
         uint16_t packetNumber = 0;
 
+        // 総パケット数を計算（終了マーカーの前に送信）
+        uint16_t totalPackets = (imageSize + packetSize - 1) / packetSize;  // 切り上げ
+        
         while (offset < imageSize) {
             size_t remaining = imageSize - offset;
             size_t currentPacketSize = (remaining > packetSize) ? packetSize : remaining;
@@ -245,12 +248,20 @@ void sendImage() {
             offset += currentPacketSize;
             packetNumber++;
             
-            delay(10); // 各パケット間の遅延
+            delay(20); // 各パケット間の遅延を増やす（BLEの送信完了を待つ）
         }
 
-        // 終了マーカーを送信（パケット番号0xFFFF）
-        uint8_t endMarker[2] = {0xFF, 0xFF};
-        pCharacteristic->setValue(endMarker, 2);
+        // 全パケット送信完了を少し待つ
+        delay(50);
+        
+        // 終了マーカーを送信（パケット番号0xFFFF + 総パケット数）
+        uint8_t endMarker[4] = {
+            0xFF, 
+            0xFF, 
+            (uint8_t)((totalPackets >> 8) & 0xFF), 
+            (uint8_t)(totalPackets & 0xFF)
+        };
+        pCharacteristic->setValue(endMarker, 4);
         pCharacteristic->notify();
 
         int64_t fr_end = esp_timer_get_time();
