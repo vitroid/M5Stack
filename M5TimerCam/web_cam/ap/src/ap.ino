@@ -13,10 +13,14 @@
  */
 #include "M5TimerCAM.h"
 #include <WiFi.h>
+#include <ESPmDNS.h>
 #include "../../../wifi_config.h"
 
 WiFiServer server(80);
-static void jpegStream(WiFiClient* client);
+static void sendSingleImage(WiFiClient* client);
+
+// mDNS (Bonjour) ホスト名
+const char* mdns_hostname = "m5timercam";
 
 // IPアドレス表示の間隔（ミリ秒）
 const unsigned long IP_DISPLAY_INTERVAL = 10000;  // 10秒ごと
@@ -55,6 +59,21 @@ void setup() {
     Serial.print("AP IP address: ");
     Serial.println(IP);
 
+    // mDNS (Bonjour) を初期化
+    if (MDNS.begin(mdns_hostname)) {
+        Serial.println("mDNS responder started");
+        Serial.print("Access via hostname: http://");
+        Serial.print(mdns_hostname);
+        Serial.println(".local");
+        Serial.print("Or via IP: http://");
+        Serial.println(IP);
+        
+        // HTTPサービスを登録
+        MDNS.addService("http", "tcp", 80);
+    } else {
+        Serial.println("Error setting up MDNS responder!");
+    }
+
     server.begin();
 }
 
@@ -66,6 +85,9 @@ void loop() {
         IPAddress IP = WiFi.softAPIP();
         Serial.print("AP IP address: ");
         Serial.println(IP);
+        Serial.print("mDNS hostname: http://");
+        Serial.print(mdns_hostname);
+        Serial.println(".local");
         Serial.print("Connected clients: ");
         Serial.println(WiFi.softAPgetStationNum());
     }
@@ -74,70 +96,73 @@ void loop() {
 
     if (client) {                       // if you get a client,
         Serial.println("New Client.");  // print a message out the serial port
-        while (client.connected()) {    // loop while the client's connected
-            if (client.available()) {   // if there's bytes to read from the
-                jpegStream(&client);
+        unsigned long timeout = millis() + 5000; // 5秒タイムアウト
+        
+        // HTTPリクエストヘッダーを読み取る（空行まで）
+        while (client.connected() && millis() < timeout) {
+            if (client.available()) {
+                String line = client.readStringUntil('\n');
+                // 空行（\rのみ）が来たらリクエストヘッダーの終わり
+                if (line.length() <= 1) {
+                    break;
+                }
             }
         }
+        
+        // 1ショット画像を送信
+        sendSingleImage(&client);
+        
         // close the connection:
         client.stop();
         Serial.println("Client Disconnected.");
     }
 }
 
-// used to image stream
-#define PART_BOUNDARY "123456789000000000000987654321"
-static const char* _STREAM_CONTENT_TYPE = "multipart/x-mixed-replace;boundary=" PART_BOUNDARY;
-static const char* _STREAM_BOUNDARY     = "\r\n--" PART_BOUNDARY "\r\n";
-static const char* _STREAM_PART         = "Content-Type: image/jpeg\r\nContent-Length: %u\r\n\r\n";
-
-static void jpegStream(WiFiClient* client) {
-    Serial.println("Image stream satrt");
+// 1ショット画像を送信
+static void sendSingleImage(WiFiClient* client) {
+    Serial.println("Capturing single image");
+    
+    // カメラから1フレーム取得
+    if (!TimerCAM.Camera.get()) {
+        Serial.println("Failed to capture image");
+        client->println("HTTP/1.1 500 Internal Server Error");
+        client->println("Content-Type: text/plain");
+        client->println();
+        client->println("Failed to capture image");
+        return;
+    }
+    
+    TimerCAM.Power.setLed(255);
+    Serial.printf("Image captured, size: %d bytes\n", TimerCAM.Camera.fb->len);
+    
+    // HTTPヘッダーを送信
     client->println("HTTP/1.1 200 OK");
-    client->printf("Content-Type: %s\r\n", _STREAM_CONTENT_TYPE);
+    client->println("Content-Type: image/jpeg");
+    client->printf("Content-Length: %u\r\n", TimerCAM.Camera.fb->len);
     client->println("Content-Disposition: inline; filename=capture.jpg");
+    client->println("Cache-Control: no-cache, no-store, must-revalidate");
     client->println("Access-Control-Allow-Origin: *");
     client->println();
-    static int64_t last_frame = 0;
-    if (!last_frame) {
-        last_frame = esp_timer_get_time();
-    }
-
-    for (;;) {
-        if (TimerCAM.Camera.get()) {
-            TimerCAM.Power.setLed(255);
-            Serial.printf("pic size: %d\n", TimerCAM.Camera.fb->len);
-
-            client->print(_STREAM_BOUNDARY);
-            client->printf(_STREAM_PART, TimerCAM.Camera.fb);
-            int32_t to_sends    = TimerCAM.Camera.fb->len;
-            int32_t now_sends   = 0;
-            uint8_t* out_buf    = TimerCAM.Camera.fb->buf;
-            uint32_t packet_len = 8 * 1024;
-            while (to_sends > 0) {
-                now_sends = to_sends > packet_len ? packet_len : to_sends;
-                if (client->write(out_buf, now_sends) == 0) {
-                    goto client_exit;
-                }
-                out_buf += now_sends;
-                to_sends -= packet_len;
-            }
-
-            int64_t fr_end     = esp_timer_get_time();
-            int64_t frame_time = fr_end - last_frame;
-            last_frame         = fr_end;
-            frame_time /= 1000;
-            Serial.printf("MJPG: %luKB %lums (%.1ffps)\r\n", (long unsigned int)(TimerCAM.Camera.fb->len / 1024),
-                          (long unsigned int)frame_time, 1000.0 / (long unsigned int)frame_time);
-
-            TimerCAM.Camera.free();
-            TimerCAM.Power.setLed(0);
+    
+    // 画像データを送信
+    int32_t to_sends    = TimerCAM.Camera.fb->len;
+    int32_t now_sends   = 0;
+    uint8_t* out_buf    = TimerCAM.Camera.fb->buf;
+    uint32_t packet_len = 8 * 1024;
+    
+    while (to_sends > 0) {
+        now_sends = to_sends > packet_len ? packet_len : to_sends;
+        size_t written = client->write(out_buf, now_sends);
+        if (written == 0) {
+            Serial.println("Failed to send image data");
+            break;
         }
+        out_buf += written;
+        to_sends -= written;
     }
-
-client_exit:
+    
     TimerCAM.Camera.free();
     TimerCAM.Power.setLed(0);
-    client->stop();
-    Serial.printf("Image stream end\r\n");
+    
+    Serial.println("Image sent successfully");
 }
