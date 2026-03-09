@@ -125,13 +125,17 @@ void handleImageChunk(const String& payload) {
   if (receivedChunkCount >= expectedChunkTotal) {
     Serial.printf("Image id=%d receive complete. size=%d bytes\n",
                   currentImgId, currentImgMaxOffset);
-    // ここで本当は JPEG として描画する（A案では簡単な通知のみ）
+    // JPEG を画面に描画する。
+    // TimerCam 側は 160x120(JPEG, QQVGA) で送っているので、
+    // とりあえず StickC の画面上にそのまま表示する。
     M5.Display.fillScreen(BLACK);
-    M5.Display.setCursor(0, 8);
-    M5.Display.setTextSize(2);
-    M5.Display.println("Img RX DONE");
-    M5.Display.printf("ID: %d\n", currentImgId);
-    M5.Display.printf("Size: %d\n", currentImgMaxOffset);
+    // 中央付近に 160x120 を出す（StickC Plus は 240x135 程度）
+    int32_t x = (M5.Display.width()  - 160) / 2;
+    int32_t y = (M5.Display.height() - 120) / 2;
+    if (x < 0) x = 0;
+    if (y < 0) y = 0;
+    // maxWidth/maxHeight の指定でクリッピングも可能
+    M5.Display.drawJpg(imgBuf, currentImgMaxOffset, x, y, 160, 120);
   }
 }
 
