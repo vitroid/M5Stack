@@ -3,8 +3,7 @@
  * @brief M5TimerCamX + ES920LR3 LoRa 送信（画像チャンク送信 A案）
  *
  * LoRa.cpp 方式で ES920LR3 に送信。
- * 今はダミーの「画像バイト列」をチャンク分割して送信する。
- * 後でカメラの JPEG バッファに差し替える想定。
+ * カメラで撮影した JPEG（QQVGA=160x120）をチャンク分割して送信する。
  *
  * @Hardwares: M5TimerCamX + ES920LR3（Grove: G4=TX, G13=RX）
  */
@@ -20,15 +19,12 @@
 // テスト用の送信間隔（実運用では 1 時間などに変更）
 #define SEND_INTERVAL_MS 5000
 
-// 擬似画像データ（A案用）
-// 実際にはカメラの JPEG バッファに置き換える予定
+// 画像サイズ関連
+// カメラは 160x120(JPEG, FRAMESIZE_QQVGA) で撮影し、
+// ここでは最大 MAX_IMG_SIZE バイトまでを送信対象とする。
 const int IMG_WIDTH  = 160;
-const int IMG_HEIGHT = 80;
-
-// とりあえず 1KB のダミーデータを送る例
-// （まずは安定動作を優先してテスト）
-const uint16_t DUMMY_IMG_SIZE = 1024;
-uint8_t dummyImage[DUMMY_IMG_SIZE];
+const int IMG_HEIGHT = 120;
+const uint16_t MAX_IMG_SIZE = 4096;
 
 // 1 チャンクあたりの生データバイト数
 // 受信側と合わせておく
@@ -110,6 +106,23 @@ void setup() {
 
   TimerCAM.begin();
 
+  // カメラ初期化（JPEG / 160x120 相当）
+  if (!TimerCAM.Camera.begin()) {
+    Serial.println("Camera Init Fail");
+    while (1) {
+      TimerCAM.Power.setLed(255);
+      delay(200);
+      TimerCAM.Power.setLed(0);
+      delay(200);
+    }
+  }
+  TimerCAM.Camera.sensor->set_pixformat(TimerCAM.Camera.sensor, PIXFORMAT_JPEG);
+  // 160x120 に近い QQVGA を使用
+  TimerCAM.Camera.sensor->set_framesize(TimerCAM.Camera.sensor, FRAMESIZE_QQVGA);
+  // 必要なら反転設定など
+  TimerCAM.Camera.sensor->set_vflip(TimerCAM.Camera.sensor, 1);
+  TimerCAM.Camera.sensor->set_hmirror(TimerCAM.Camera.sensor, 0);
+
   if (LoRaInit(RX_PIN, TX_PIN, RESET_PIN, BOOT_PIN) < 0) {
     Serial.println("LoRa init FAIL");
     while (1) {
@@ -120,12 +133,7 @@ void setup() {
     }
   }
 
-  // ダミー画像データを適当に埋める（パターン）
-  for (uint16_t i = 0; i < DUMMY_IMG_SIZE; i++) {
-    dummyImage[i] = (uint8_t)(i & 0xFF);
-  }
-
-  Serial.println("LoRa init OK. Ready to send image chunks...");
+  Serial.println("LoRa init OK. Ready to send camera image chunks...");
 }
 
 void loop() {
@@ -133,19 +141,33 @@ void loop() {
   // 実運用ではここを「1 時間に 1 回」などに変更する。
   static uint8_t imgId = 0;
   imgId++;  // 画像 ID を更新
+  // カメラから JPEG 画像を取得
+  if (!TimerCAM.Camera.get()) {
+    Serial.println("Camera get FAIL");
+    delay(1000);
+    return;
+  }
+
+  uint32_t imgSize = TimerCAM.Camera.fb->len;
+  if (imgSize > MAX_IMG_SIZE) {
+    Serial.printf("Camera img too large (%lu), truncate to %u\n",
+                  (unsigned long)imgSize, MAX_IMG_SIZE);
+    imgSize = MAX_IMG_SIZE;
+  }
+  const uint8_t* imgBuf = TimerCAM.Camera.fb->buf;
 
   uint16_t chunkTotal =
-      (DUMMY_IMG_SIZE + CHUNK_DATA_LEN - 1) / CHUNK_DATA_LEN;
+      (imgSize + CHUNK_DATA_LEN - 1) / CHUNK_DATA_LEN;
 
-  Serial.printf("Start send image id=%d, size=%d, chunks=%d\n",
-                imgId, DUMMY_IMG_SIZE, chunkTotal);
+  Serial.printf("Start send image id=%d, size=%lu, chunks=%d\n",
+                imgId, (unsigned long)imgSize, chunkTotal);
 
   for (uint16_t chunkIdx = 0; chunkIdx < chunkTotal; chunkIdx++) {
     uint16_t offset = chunkIdx * CHUNK_DATA_LEN;
-    uint16_t remain = DUMMY_IMG_SIZE - offset;
+    uint16_t remain = imgSize - offset;
     uint16_t thisLen = (remain > CHUNK_DATA_LEN) ? CHUNK_DATA_LEN : remain;
 
-    String hexData = bytesToHex(&dummyImage[offset], thisLen);
+    String hexData = bytesToHex(&imgBuf[offset], thisLen);
 
     // ペイロードフォーマット:
     // I,<imgId>,<chunkIdx>,<totalChunks>,<hexData>
@@ -164,6 +186,9 @@ void loop() {
   }
 
   Serial.println("Image send done.");
+
+  // フレームバッファを解放
+  TimerCAM.Camera.free();
 
   // 次の画像送信までの待ち時間
   for (int i = SEND_INTERVAL_MS / 1000; i > 0; i--) {

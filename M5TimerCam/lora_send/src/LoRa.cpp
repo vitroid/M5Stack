@@ -49,7 +49,9 @@ int LoRaCommand(String s) {
   Serial.println(s);
   String rx = Serial2.readString();
   Serial.print(rx);
-  return (rx.indexOf("OK"));
+  // NG が含まれる場合は失敗（NG 101 と OK が混ざっても誤成功判定しない）
+  if (rx.indexOf("NG") >= 0) return -1;
+  return (rx.indexOf("OK") >= 0) ? 0 : -1;
 }
 
 int LoRaInit(int rx, int tx, int reset, int boot) {
