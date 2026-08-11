@@ -277,3 +277,4 @@ const unsigned long STATUS_DISPLAY_INTERVAL = 10000;  // ミリ秒（10000 = 10�
 ## ライセンス
 
 このプロジェクトは、元の M5Stack のサンプルコードをベースにしています。
+
