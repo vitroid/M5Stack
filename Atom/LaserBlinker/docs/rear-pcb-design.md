@@ -1,5 +1,8 @@
 # 後方コア PCB 回路設計書（JLCPCB PCBA 前提）
 
+> **正本ディレクトリ**: `hardware/rear-core/`（発注 Gerber / BOM / KiCad）。  
+> `hardware/rear-core-claude/` は非正本アーカイブ（git 非追跡）。参照・発注に使わない。
+
 外部の端子盤（WS2812 テープ、将来の拡張ユニット）を除く中核回路と、前後幹線をつなぐ **トランス無し RJ45 ジャック（CAT5e/6 LAN ケーブル直挿し）** を 1 枚の小型基板に統合する設計仕様。
 
 - **MCU**: `ESP32-C3-MINI-1-N4`（技適取得済み SMD モジュール）

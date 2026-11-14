@@ -18,5 +18,5 @@ hardware/*/out/place-*.kicad_pcb
 hardware/*/out/best-board.kicad_pcb
 hardware/*/out/best-route.kicad_pcb
 
-# 別案。手元には残すがリポジトリには入れない。
+# 非正本アーカイブ（正本は hardware/rear-core/）。手元には残すが git には入れない。
 hardware/rear-core-claude/
