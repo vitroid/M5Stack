@@ -34,3 +34,15 @@ pio run -e esp32-c3-supermini-rear
 - PCB 設計／`hardware/*-core`: **RJ45**（Passive PoE + A/B）
 
 前後を混在させるときはアダプタかピン対応表が必要。
+
+## Assembly status（front-core 手配線）
+
+未接続は **5 → 3**（2026-11-14）。残オープン:
+
+| Ref | ネット | Done |
+| --- | --- | --- |
+| **R21** (10k) | `VBUS_PD` → **CH224K** (`U0`) Pin8 `VBUS`（移設 U0 まわり） | 両端はんだ＋≈10k 導通 |
+| **R22** (1k 0805) | `VBUS_PD` → **U0** Pin1 `VDD`（同上） | 両端はんだ＋≈1k 導通 |
+| **R3** (5.1k) | **J3 USB_DBG** CC1 (`A5`) → R3 → GND | CC1〜R3〜GND 連続 |
+
+回路: `hardware/front-core/front-core.kicad_sch`（ブロック 1 = PD/CH224K、ブロック 3 = USB_DBG）。詳細チェックリストは Project store の `docs/laserblinker-front-wiring.md`。

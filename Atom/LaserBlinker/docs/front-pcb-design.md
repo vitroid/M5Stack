@@ -1,5 +1,7 @@
 # 前方オールインワン PCB 回路設計書（JLCPCB PCBA 前提）
 
+> **手配線進捗（2026-11-14）**: 未接続 5→3。残は移設 **CH224K (`U0`)** まわりの **R21**（`VBUS_PD`→Pin8 `VBUS`, 10k）・**R22**（`VBUS_PD`→Pin1 `VDD`, 1k）、および **J3 USB_DBG** の **CC1→R3**（5.1k→GND）。KiCad 正本: `hardware/front-core/`。
+
 ユニバーサル基板上で肥大化していたモジュール群（PD トリガー・DC-DC 降圧・MAX485・MCU・TO-220 MOSFET・5.08mm 端子台）を、RJ45 幹線ジャック・ネジ端子台も含めて **1 枚の小型基板（JLCPCB フル PCBA 外注実装：SMD＋スルーホール一括実装、手はんだ不要）** に統合する設計仕様。
 
 - **MCU**: `ESP32-S3-MINI-1-N8`（技適取得済み SMD モジュール、USB-C 直結、ハードウェア UART 3 系統、豊富な GPIO）
