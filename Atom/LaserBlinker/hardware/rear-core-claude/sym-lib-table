@@ -1,4 +1,0 @@
-(sym_lib_table
-	(version 7)
-	(lib (name "LaserBlinker")(type "KiCad")(uri "${KIPRJMOD}/LaserBlinker.kicad_sym")(options "")(descr "project parts"))
-)

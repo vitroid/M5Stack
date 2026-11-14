@@ -18,7 +18,5 @@ hardware/*/out/place-*.kicad_pcb
 hardware/*/out/best-board.kicad_pcb
 hardware/*/out/best-route.kicad_pcb
 
-hardware/rear-core-claude/out_drc.json
-hardware/rear-core-claude/out_erc.json
-hardware/rear-core-claude/out_netlist.xml
-hardware/rear-core-claude/out_route.dsn
+# 別案。手元には残すがリポジトリには入れない。
+hardware/rear-core-claude/
