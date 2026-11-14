@@ -566,7 +566,7 @@ def build_schematic():
     j1 = sb.place(
         "Connector:RJ45_Shielded", "J1", "RJ45_CAT5_TRUNK", 30.48, 40.64, angle=0,
         footprint="Connector_RJ:RJ45_Amphenol_RJHSE5380",
-        lcsc="C386757", mpn="R-RJ45R08P-C000",
+        lcsc="C386756", mpn="R-RJ45R08P-B000",  # Non-LED; matches Amphenol RJHSE5380-style pads
         dnp=False, ref_offset=(-5.08, -15.24), val_offset=(2.54, -15.24),
     )
     # Pin 7 & 8 (Brown pair) -> GND + PWR_FLAG

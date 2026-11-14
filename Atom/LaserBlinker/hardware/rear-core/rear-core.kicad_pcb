@@ -3270,7 +3270,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C386757"
+		(property "LCSC" "C386756"
 			(at 0 0 180)
 			(layer "F.Fab")
 			(hide yes)
@@ -3282,7 +3282,7 @@
 				)
 			)
 		)
-		(property "MPN" "R-RJ45R08P-C000"
+		(property "MPN" "R-RJ45R08P-B000"
 			(at 0 0 180)
 			(layer "F.Fab")
 			(hide yes)
