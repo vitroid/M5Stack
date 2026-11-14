@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "RearCore")(type "KiCad")(uri "${KIPRJMOD}/RearCore.kicad_sym")(options "")(descr "LaserBlinker Rear Core Custom Symbols"))
+)

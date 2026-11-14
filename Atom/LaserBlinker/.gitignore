@@ -1,0 +1,24 @@
+# ビルドキャッシュ、ロック、ログ
+__pycache__/
+*.pyc
+*.lck
+*.log
+logs/
+
+# スクリプトが短時間で作り直せる中間ファイル。
+# 追跡するもの: KiCad ソース、fab/、Freerouting の .ses、
+# 3D レンダ、回路図の PDF/PNG。
+hardware/*/out/*.xml
+hardware/*/out/*.dsn
+hardware/*/out/*.json
+hardware/*/out/*.rpt
+hardware/*/out/*.svg
+hardware/*/out/*.csv
+hardware/*/out/place-*.kicad_pcb
+hardware/*/out/best-board.kicad_pcb
+hardware/*/out/best-route.kicad_pcb
+
+hardware/rear-core-claude/out_drc.json
+hardware/rear-core-claude/out_erc.json
+hardware/rear-core-claude/out_netlist.xml
+hardware/rear-core-claude/out_route.dsn

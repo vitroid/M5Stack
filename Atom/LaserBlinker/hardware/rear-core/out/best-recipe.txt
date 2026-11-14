@@ -1,0 +1,4 @@
+sw_left_d1_down on 66.0x42.0
+right margin cropped from 70->66 (content xmax~65)
+holes: H2 (4.0,9.0); H1 above J3 (58.2,20.5)
+DRC=0 unconnected=0
