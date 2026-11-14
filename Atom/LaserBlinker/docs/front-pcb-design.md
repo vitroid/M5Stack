@@ -2,7 +2,7 @@
 
 > **配置の引き継ぎ**: 端子の辺・向き・動かさない条件は [`pcb-layout-policy.md`](pcb-layout-policy.md)。この文書は回路定数とピン表。
 >
-> **Fab readiness（2026-11-14）**: 正本 `hardware/front-core/`（JLCPCB 仮想完結・手はんだなし）。ERC 0。DRC 銅箔未接続 **3** — 移設 **CH224K (`U0`)** まわり **R21**（`/VBUS_PD`→Pin8 `VBUS`）・**R22**（`/VBUS_PD`→Pin1 `VDD`）、**J3 CC1→R3**。BOM/CPL に部品あり。再配置またはチャネル確保が発注ゲート。FW（`src/front/pins.h`）は旧 C3 のまま、基板確定後に追従。
+> **Fab readiness（2026-11-14）**: 正本 `hardware/front-core/`（JLCPCB 仮想完結・手はんだなし）。ERC 0。DRC 銅箔未接続 **0** / short **0**（R22→F1 西、R3→J3 西、R21 は U0 東のまま B.Cu 給電）。`fab/` 再生成済。FW（`src/front/pins.h`）は旧 C3 のまま、基板確定後に追従。
 
 ユニバーサル基板上で肥大化していたモジュール群（PD トリガー・DC-DC 降圧・MAX485・MCU・TO-220 MOSFET・5.08mm 端子台）を、RJ45 幹線ジャック・ネジ端子台も含めて **1 枚の小型基板（JLCPCB フル PCBA 外注実装：SMD＋スルーホール一括実装、手はんだ不要）** に統合する設計仕様。
 
