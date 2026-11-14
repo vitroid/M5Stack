@@ -1066,7 +1066,7 @@ def export_jlcpcb_and_renders():
         for fn in sorted(os.listdir(gerber_dir)):
             zf.write(os.path.join(gerber_dir, fn), arcname=fn)
 
-    # 2. JLCPCB BOM (SMD parts only, excluding DNP J1..J3, jumpers, mounting holes, testpoints)
+    # 2. JLCPCB BOM (exclude DNP; no ref ranges — JLCPCB does not expand "R5-R7")
     bom_path = os.path.join(FAB_DIR, "jlcpcb-bom.csv")
     subprocess.run([
         KCLI, "sch", "export", "bom",
@@ -1074,18 +1074,20 @@ def export_jlcpcb_and_renders():
         "--labels", "Comment,Designator,Footprint,JLCPCB Part #",
         "--group-by", "Value,Footprint,LCSC",
         "--exclude-dnp",
+        "--ref-range-delimiter", "",
         "--output", bom_path,
         SCH_PATH,
     ], check=True)
 
-    # 3. JLCPCB CPL (Component Placement List)
+    # 3. JLCPCB CPL (SMD + THT wave parts J1/J2/J3; skip jumpers/testpoints/holes)
+    # Do NOT use --smd-only: BOM lists THT connectors for wave soldering, and
+    # JLCPCB rejects BOM designators that are absent from the CPL.
     pos_raw = os.path.join(FAB_DIR, "pos-raw.csv")
     subprocess.run([
         KCLI, "pcb", "export", "pos",
         "--side", "front",
         "--format", "csv",
         "--units", "mm",
-        "--smd-only",
         "--exclude-dnp",
         "--output", pos_raw,
         PCB_PATH,
