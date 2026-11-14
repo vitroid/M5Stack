@@ -9,7 +9,7 @@ pio run -e esp32-c3-supermini-front
 pio run -e esp32-c3-supermini-rear
 ```
 
-現行ファームは前後とも **ESP32-C3 SuperMini**（`platformio.ini`）。ピン定義は `src/front/pins.h` / `src/rear/pins.h`。
+現行ファームは、市販モジュールで組んで実装まで済ませた試作向けで、前後とも **ESP32-C3 SuperMini**（`platformio.ini`）。ピン定義は `src/front/pins.h` / `src/rear/pins.h`。`hardware/*-core` は、その試作を JLCPCB の一枚基板にまとめ、トランシーバ・幹線コネクタ・MCU・拡張端子を変えた次の基板である。ファームはまだ基板側のピンへ追従していない。いきさつと対応表は `docs/pcb-layout-policy.md` の「いきさつ」。
 
 ## ハードウェア正本
 
@@ -23,10 +23,12 @@ pio run -e esp32-c3-supermini-rear
 
 ## ドキュメント
 
-- `docs/front-circuit.md` — 前部プロト（C3）結線
-- `docs/front-pcb-design.md` — 前部オールインワン PCB（S3）
-- `docs/rear-circuit.md` — 後部プロト（C3）結線
-- `docs/rear-pcb-design.md` — 後部コア PCB（C3-MINI-1）
+- `docs/pcb-layout-policy.md` — 試作から一体基板までのいきさつ、端子配置、動かさない条件（引き継ぎの入口）
+- `PLAN.md` / `PLAN2.md` — それより前のメモ（M5Stack Core / Atom Lite、幹線 5V）。実機の結線ではない
+- `docs/front-circuit.md` — 実装済み試作の前部結線（C3 SuperMini、GX12、MAX485）
+- `docs/front-pcb-design.md` — 前部オールインワン PCB（S3）の回路定数とピン表
+- `docs/rear-circuit.md` — 実装済み試作の後部結線
+- `docs/rear-pcb-design.md` — 後部コア PCB（C3-MINI-1）の回路定数とピン表
 
 ## 幹線コネクタの注意
 
@@ -35,14 +37,22 @@ pio run -e esp32-c3-supermini-rear
 
 前後を混在させるときはアダプタかピン対応表が必要。
 
-## Assembly status（front-core 手配線）
+## Fab readiness（front-core）
 
-未接続は **5 → 3**（2026-11-14）。残オープン:
+JLCPCB 発注前ゲート。手はんだ作業はない。
 
-| Ref | ネット | Done |
-| --- | --- | --- |
-| **R21** (10k) | `VBUS_PD` → **CH224K** (`U0`) Pin8 `VBUS`（移設 U0 まわり） | 両端はんだ＋≈10k 導通 |
-| **R22** (1k 0805) | `VBUS_PD` → **U0** Pin1 `VDD`（同上） | 両端はんだ＋≈1k 導通 |
-| **R3** (5.1k) | **J3 USB_DBG** CC1 (`A5`) → R3 → GND | CC1〜R3〜GND 連続 |
+| 項目 | 状態 |
+| --- | --- |
+| KiCad | **Yes** — `kicad-cli` **10.0.8**（`scripts/build_pcb.py`） |
+| ERC | 0 |
+| BOM/CPL | R21 / R22 / R3 収録済 |
+| DRC unconnected | **3**（発注不可のまま） |
+| rear-core | fab 完了・正本 |
 
-回路: `hardware/front-core/front-core.kicad_sch`（ブロック 1 = PD/CH224K、ブロック 3 = USB_DBG）。詳細チェックリストは Project store の `docs/laserblinker-front-wiring.md`。
+残銅箔未接続（回路図ネットは存在。CH224K 移設後の配置密度で Freerouting 未解決）:
+
+1. **R21** — `/VBUS_PD` → `U0` Pin8 `VBUS`
+2. **R22** — `/VBUS_PD` → `U0` Pin1 `VDD`
+3. **J3** CC1 (`A5`) → **R3** → GND
+
+次は `R21`/`R22`/`R3` の再配置（または配線チャネル確保）→ DRC 0 → `fab/` 再出力。詳細は Project store `docs/laserblinker-front-wiring.md`。FW ピン追従は PCB 確定後。
