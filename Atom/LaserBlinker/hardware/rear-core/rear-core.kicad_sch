@@ -11444,7 +11444,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C311038"
+		(property "LCSC" "C311983"
 			(at 226.06 43.18 0)
 			(hide yes)
 			(effects
@@ -12271,7 +12271,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C128268"
+		(property "LCSC" "C2895281"
 			(at 308.61 58.42 0)
 			(hide yes)
 			(effects
@@ -15095,7 +15095,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C72041"
+		(property "LCSC" "C965807"
 			(at 156.21 203.2 0)
 			(hide yes)
 			(effects
@@ -16410,7 +16410,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C15919"
+		(property "LCSC" "C293966"
 			(at 321.31 177.8 0)
 			(hide yes)
 			(effects
@@ -17558,7 +17558,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C100022"
+		(property "LCSC" "C100024"
 			(at 279.4 218.44 0)
 			(hide yes)
 			(effects
