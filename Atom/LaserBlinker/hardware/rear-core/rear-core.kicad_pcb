@@ -2907,7 +2907,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C72041"
+		(property "LCSC" "C965807"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -3270,7 +3270,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C386757"
+		(property "LCSC" "C386756"
 			(at 0 0 180)
 			(layer "F.Fab")
 			(hide yes)
@@ -3282,7 +3282,7 @@
 				)
 			)
 		)
-		(property "MPN" "R-RJ45R08P-C000"
+		(property "MPN" "R-RJ45R08P-B000"
 			(at 0 0 180)
 			(layer "F.Fab")
 			(hide yes)
@@ -6226,7 +6226,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C100022"
+		(property "LCSC" "C100024"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -8170,7 +8170,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C128268"
+		(property "LCSC" "C2895281"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -10698,7 +10698,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C311038"
+		(property "LCSC" "C311983"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -12169,7 +12169,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C15919"
+		(property "LCSC" "C293966"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)

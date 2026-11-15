@@ -1,0 +1,182 @@
+** Drc report for rear-core.kicad_pcb **
+** Created on 2026-11-15T08:35:11 **
+** Report includes: Errors, Warnings, Exclusions **
+
+** Found 41 DRC violations **
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(166.0000 mm, 122.0000 mm): Segment on Edge.Cuts
+    @(115.5950 mm, 120.1250 mm): Segment of J4 on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(166.0000 mm, 122.0000 mm): Segment on Edge.Cuts
+    @(115.5950 mm, 122.0250 mm): Segment of J4 on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(166.0000 mm, 122.0000 mm): Segment on Edge.Cuts
+    @(124.9950 mm, 120.1250 mm): Segment of J4 on F.Silkscreen
+[hole_to_hole]: Drilled hole too close to other hole (board setup constraints min 0.2500 mm; actual 0.1642 mm)
+    Rule: board setup constraints; warning
+    @(105.0000 mm, 90.0000 mm): Via [GND] on F.Cu - B.Cu
+    @(104.0000 mm, 89.0000 mm): PTH pad 1 [GND] of H2
+[hole_to_hole]: Drilled hole too close to other hole (board setup constraints min 0.2500 mm; actual 0.0000 mm)
+    Rule: board setup constraints; warning
+    @(105.0000 mm, 90.0000 mm): Via [GND] on F.Cu - B.Cu
+    @(105.1667 mm, 90.1667 mm): PTH pad 1 [GND] of H2
+[hole_to_hole]: Drilled hole too close to other hole (board setup constraints min 0.2500 mm; actual 0.1643 mm)
+    Rule: board setup constraints; warning
+    @(159.0000 mm, 102.0000 mm): Via [GND] on F.Cu - B.Cu
+    @(159.3917 mm, 101.6667 mm): PTH pad 1 [GND] of H1
+[hole_to_hole]: Drilled hole too close to other hole (board setup constraints min 0.2500 mm; actual 0.1643 mm)
+    Rule: board setup constraints; warning
+    @(159.0000 mm, 99.0000 mm): Via [GND] on F.Cu - B.Cu
+    @(159.3917 mm, 99.3333 mm): PTH pad 1 [GND] of H1
+[hole_to_hole]: Drilled hole too close to other hole (board setup constraints min 0.2500 mm; actual 0.1643 mm)
+    Rule: board setup constraints; warning
+    @(159.0000 mm, 99.0000 mm): Via [GND] on F.Cu - B.Cu
+    @(159.3917 mm, 99.3333 mm): PTH pad 1 [GND] of H1
+[hole_to_hole]: Drilled hole too close to other hole (board setup constraints min 0.2500 mm; actual 0.1643 mm)
+    Rule: board setup constraints; warning
+    @(159.0000 mm, 102.0000 mm): Via [GND] on F.Cu - B.Cu
+    @(159.3917 mm, 101.6667 mm): PTH pad 1 [GND] of H1
+[hole_to_hole]: Drilled hole too close to other hole (board setup constraints min 0.2500 mm; actual 0.1642 mm)
+    Rule: board setup constraints; warning
+    @(105.0000 mm, 90.0000 mm): Via [GND] on F.Cu - B.Cu
+    @(104.0000 mm, 89.0000 mm): PTH pad 1 [GND] of H2
+[hole_to_hole]: Drilled hole too close to other hole (board setup constraints min 0.2500 mm; actual 0.0000 mm)
+    Rule: board setup constraints; warning
+    @(105.0000 mm, 90.0000 mm): Via [GND] on F.Cu - B.Cu
+    @(105.1667 mm, 90.1667 mm): PTH pad 1 [GND] of H2
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(117.9625 mm, 105.3500 mm): Reference field of TP1
+    @(117.9625 mm, 105.3500 mm): Circle of TP1 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(120.2950 mm, 110.2000 mm): PCB text 'J4 USB' on F.Silkscreen
+    @(121.1825 mm, 110.8800 mm): Reference field of U7
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(107.4750 mm, 108.2000 mm): PCB text 'J2:5V D G' on F.Silkscreen
+    @(106.6206 mm, 107.9750 mm): Segment of C7 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(107.4750 mm, 108.2000 mm): PCB text 'J2:5V D G' on F.Silkscreen
+    @(106.6206 mm, 107.9750 mm): Segment of C7 on F.Silkscreen
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(139.1350 mm, 101.9400 mm): Segment of D8 on F.Silkscreen
+    @(139.3450 mm, 101.4250 mm): Reference field of U3
+[silk_overlap]: Silkscreen clearance
+    Rule: board setup constraints silk; warning
+    @(139.1350 mm, 103.4600 mm): Segment of D8 on F.Silkscreen
+    @(139.3450 mm, 101.4250 mm): Reference field of U3
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(117.9625 mm, 105.3500 mm): Reference field of TP1
+    @(117.9625 mm, 105.3500 mm): Pad 1 [Net-(U4-IO0)] of TP1 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(120.2950 mm, 110.2000 mm): PCB text 'J4 USB' on F.Silkscreen
+    @(122.3200 mm, 110.8800 mm): Pad 5 [VBUS] of U7 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(120.2950 mm, 110.2000 mm): PCB text 'J4 USB' on F.Silkscreen
+    @(122.3200 mm, 109.9300 mm): Pad 6 [/USB_DN] of U7 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(104.0000 mm, 89.0000 mm): Reference field of H2
+    @(104.0000 mm, 89.0000 mm): PTH pad 1 [GND] of H2
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(110.2750 mm, 100.3900 mm): Reference field of U6
+    @(111.4125 mm, 100.0900 mm): Pad 1 [+5V] of C17 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(118.5125 mm, 87.5000 mm): Reference field of U4
+    @(118.1375 mm, 87.3000 mm): Pad 2 [GND] of C8 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(117.7250 mm, 90.0000 mm): Reference field of U2
+    @(116.5875 mm, 90.0000 mm): Pad 2 [GND] of U2 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(137.4450 mm, 104.2000 mm): PCB text 'J1 RJ45' on F.Silkscreen
+    @(137.8500 mm, 103.9000 mm): Pad 8 [+3V3] of U3 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(137.4450 mm, 104.2000 mm): PCB text 'J1 RJ45' on F.Silkscreen
+    @(135.3100 mm, 103.9000 mm): Pad 6 [/RS485_A] of U3 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(137.4450 mm, 104.2000 mm): PCB text 'J1 RJ45' on F.Silkscreen
+    @(139.7450 mm, 103.6375 mm): Pad 1 [/RS485_A] of D8 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(121.1825 mm, 110.8800 mm): Reference field of U7
+    @(120.0450 mm, 110.8800 mm): Pad 2 [GND] of U7 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(121.1825 mm, 110.8800 mm): Reference field of U7
+    @(122.3200 mm, 110.8800 mm): Pad 5 [VBUS] of U7 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(107.4750 mm, 108.2000 mm): PCB text 'J2:5V D G' on F.Silkscreen
+    @(104.2750 mm, 107.2650 mm): Pad 1 [+5V] of C7 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(120.2950 mm, 110.2000 mm): PCB text 'J4 USB' on F.Silkscreen
+    @(118.0450 mm, 110.1800 mm): Pad 2 [GND] of R3 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(120.2950 mm, 110.2000 mm): PCB text 'J4 USB' on F.Silkscreen
+    @(120.0450 mm, 109.9300 mm): Pad 1 [Net-(J4-D--PadA7)] of U7 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(120.2950 mm, 110.2000 mm): PCB text 'J4 USB' on F.Silkscreen
+    @(120.0450 mm, 110.8800 mm): Pad 2 [GND] of U7 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(140.6950 mm, 97.4250 mm): Reference field of JP1
+    @(140.0450 mm, 97.4250 mm): Pad 1 [/RS485_A] of JP1 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(135.0125 mm, 96.0000 mm): Reference field of D7
+    @(135.0125 mm, 95.2125 mm): Pad 2 [Net-(D7-A)] of D7 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(135.0125 mm, 96.0000 mm): Reference field of D7
+    @(135.0125 mm, 96.7875 mm): Pad 1 [Net-(D7-K)] of D7 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(140.6950 mm, 97.4250 mm): Reference field of JP1
+    @(140.5450 mm, 96.6750 mm): Rectangle of JP1 on F.Mask
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(140.6950 mm, 97.4250 mm): Reference field of JP1
+    @(141.3450 mm, 97.4250 mm): Pad 2 [Net-(JP1-B)] of JP1 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(158.2250 mm, 100.5000 mm): Reference field of H1
+    @(158.2250 mm, 100.5000 mm): PTH pad 1 [GND] of H1
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(149.5250 mm, 91.4750 mm): Reference field of L1
+    @(148.7250 mm, 90.4750 mm): Pad 2 [GND] of D6 on F.Cu
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(148.9750 mm, 95.5750 mm): Reference field of U1
+    @(149.6125 mm, 95.2750 mm): Pad 1 [Net-(U1-BOOT)] of C4 on F.Cu
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** Ignored checks **
+    - Footprint has no courtyard defined
+    - Track endpoint not centered on via
+    - Tuning profile track geometries
+    - Footprint doesn't match symbol's footprint filters
+    - Footprint component type doesn't match footprint pads
+
+** End of Report **

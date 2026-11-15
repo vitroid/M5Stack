@@ -566,7 +566,7 @@ def build_schematic():
     j1 = sb.place(
         "Connector:RJ45_Shielded", "J1", "RJ45_CAT5_TRUNK", 30.48, 40.64, angle=0,
         footprint="Connector_RJ:RJ45_Amphenol_RJHSE5380",
-        lcsc="C386757", mpn="R-RJ45R08P-C000",
+        lcsc="C386756", mpn="R-RJ45R08P-B000",  # Non-LED; matches Amphenol RJHSE5380-style pads
         dnp=False, ref_offset=(-5.08, -15.24), val_offset=(2.54, -15.24),
     )
     # Pin 7 & 8 (Brown pair) -> GND + PWR_FLAG
@@ -687,7 +687,7 @@ def build_schematic():
 
     u1 = sb.place(
         "Regulator_Switching:TPS54302", "U1", "TPS54302DDCR", 226.06, 43.18, angle=0,
-        footprint="Package_TO_SOT_SMD:SOT-23-6", lcsc="C311038", mpn="TPS54302DDCR",
+        footprint="Package_TO_SOT_SMD:SOT-23-6", lcsc="C311983", mpn="TPS54302DDCR",
         ref_offset=(0, -8.89), val_offset=(0, -6.35),
     )
     sb.wire(*d1["1"], *u1["3"])
@@ -749,7 +749,7 @@ def build_schematic():
 
     c7 = sb.place(
         "Device:C_Polarized", "C7", "220uF/10V", 308.61, 58.42, angle=0,
-        footprint="Capacitor_SMD:CP_Elec_6.3x7.7", lcsc="C128268",
+        footprint="Capacitor_SMD:CP_Elec_6.3x7.7", lcsc="C2895281",
         ref_offset=(4.45, -1.27), val_offset=(4.45, 1.27),
     )
     sb.junc(308.61, 43.18)
@@ -947,7 +947,7 @@ def build_schematic():
 
     d7 = sb.place(
         "Device:LED", "D7", "BLUE", 156.21, u4["22"][1], angle=180,
-        footprint="LED_SMD:LED_0603_1608Metric", lcsc="C72041",
+        footprint="LED_SMD:LED_0603_1608Metric", lcsc="C965807", mpn="XL-1608UBC-04",
         ref_offset=(0, -3.81), val_offset=(0, 3.81),
     )
     r8 = sb.place(
@@ -1072,7 +1072,7 @@ def build_schematic():
     # D8: SM712_SOT23 TVS (Pin 1 A1 at -8.89, Pin 2 A2 at +8.89, Pin 3 common at (0, -3.81)->bottom)
     d8 = sb.place(
         "Diode:SM712_SOT23", "D8", "SM712", 321.31, 177.80, angle=0,
-        footprint="Package_TO_SOT_SMD:SOT-23", lcsc="C15919", mpn="SM712",
+        footprint="Package_TO_SOT_SMD:SOT-23", lcsc="C293966", mpn="SM712",
         ref_offset=(0, -5.08), val_offset=(0, -2.54),
     )
     # Connect D8[1] (312.42, 177.80) to A branch at (311.15, 162.56)
@@ -1163,7 +1163,7 @@ def build_schematic():
 
     u6 = sb.place(
         "Logic_LevelTranslator:SN74LV1T34DBV", "U6", "SN74LV1T34DBVR", 279.40, 218.44, angle=0,
-        footprint="Package_TO_SOT_SMD:SOT-23-5", lcsc="C100022", mpn="SN74LV1T34DBVR",
+        footprint="Package_TO_SOT_SMD:SOT-23-5", lcsc="C100024", mpn="SN74LV1T34DBVR",
         ref_offset=(-5.08, -10.16), val_offset=(5.08, -10.16),
     )
     sb.nc(u6["1"])

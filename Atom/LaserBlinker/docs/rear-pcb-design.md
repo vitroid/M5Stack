@@ -165,20 +165,22 @@ ESP32-C3 は `GPIO2`, `GPIO8`, `GPIO9` が起動モード決定用のストラ�
 
 | 記号 | 品名・役割 | 型番 | パッケージ | LCSC 品番目安 | 区分目安 |
 | --- | --- | --- | --- | --- | --- |
-| `J1` | トランス無し RJ45 ジャック（8P8C） | `R-RJ45R08P-C000` 等 | THT 横向きシールド付 | `C386757` / `C2683359` | THT（JLCPCB 実装・手付け両対応） |
-| `U1` | 12V→5V 3A 同期整流 Buck | `TPS54302DDCR` | SOT-23-6 | `C311038` / `C524861` | Extended |
+| `J1` | トランス無し RJ45 ジャック（8P8C・**非 LED**） | `R-RJ45R08P-B000` | THT 横向きシールド付 | `C386756` | THT（JLCPCB Wave・`RJ45_Amphenol_RJHSE5380` 互換） |
+| `U1` | 12V→5V 3A 同期整流 Buck | `TPS54302DDCR` | SOT-23-6 | `C311983` | Extended |
 | `L1` | パワーインダクタ 4.7µH 4A+ | `SRP6540` / 一体成型品 | SMD 6.5×6.5mm | `C408412` 等 | Basic あり |
 | `D1` | 12V 逆接保護ショットキー | `SS34` | SMA | `C8678` | **Basic** |
 | `TVS1` | 12V サージ保護 TVS | `SMBJ15A` | SMB | `C73385` 等 | Extended |
 | `D2, D3` | 電源 OR（+5V / VBUS） | `B5819W` (1N5819) | SOD-123 | `C8598` | **Basic** |
 | `U2` | 5V→3.3V 600mA LDO | `AP2112K-3.3TRG1` (または `ME6211C33M5G`) | SOT-23-5 | `C51118` / `C82942` | Extended (`AMS1117-3.3` `C6186` なら **Basic**) |
 | `U3` | 3.3V RS-485 トランシーバ | `SP3485EN-L/TR` (または `MAX3485ESA`) | SOIC-8 | `C9945` | Extended |
-| `TVS2` | RS-485 バス保護 TVS | `SM712` | SOT-23 | `C15919` | **Basic** / Preferred |
+| `TVS2` | RS-485 バス保護 TVS | `SM712`（DOWO 互換） | SOT-23 | `C293966` | Extended（旧 `C15919` 在庫不足の代替） |
+| `C7` | +5V バルク電解 | `220µF/10V` | SMD D6.3×L7.7 | `C2895281` | Extended（旧 `C128268` 未マッチ代替） |
+| `D7` | 状態表示 青 LED | `XL-1608UBC-04` | 0603 | `C965807` | Extended（旧 Basic `C72041` 停産/不足代替；候補 `C2288`） |
 | `U4` | Wi-Fi/BLE MCU（技適済） | `ESP32-C3-MINI-1-N4` | SMD Module | `C2838502` / `C2934560` | Extended |
 | `USB1` (`J4`) | USB Type-C 16P | `TYPE-C-31-M-12` | SMD | `C165948` | **Basic** / Preferred |
 | `U7` | USB 2.0 ESD 保護アレイ | `USBLC6-2SC6` | SOT-23-6 | `C7519` | **Basic** / Preferred |
 | `U5` | 3 軸加速度センサ | `LIS3DHTR` | LGA-16 (3×3mm) | `C15134` | Extended |
-| `U6` | 3.3V→5V 1ch バッファ | `SN74LV1T34DBVR` | SOT-23-5 | `C100022` | Extended |
+| `U6` | 3.3V→5V 1ch バッファ | `SN74LV1T34DBVR` | SOT-23-5 | `C100024` | Extended |
 | `J2` | WS2812 出力 3P 横出し | `S3B-XH-A` | JST-XH 3P Horizontal | `C157927` | THT |
 | `J3` | 拡張ポート 4P 横出し | `S4B-XH-A` | JST-XH 4P Horizontal | `C157928` | THT |
 | `SW_RST, SW_BOOT` | SMD タクトスイッチ | `TS-1187A-B-A-B` 等 | SMD 5.1×5.1mm | `C318884` | **Basic** |
