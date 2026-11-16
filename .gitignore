@@ -2,11 +2,15 @@
 *~
 *.DS_Store
 
-# Meross probe local secrets / venv (never commit credentials)
+# Meross probe / bridge local secrets / venv (never commit credentials)
 meross/.env
 meross/.venv/
 meross/venv/
 meross/__pycache__/
+meross/**/__pycache__/
 meross/*.pyc
 meross/*.local.cfg
 meross/local.env
+
+# Amica MerossRemote Wi‑Fi / bridge host (use secrets.h.example)
+Amica/MerossRemote/secrets.h
