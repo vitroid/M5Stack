@@ -39,12 +39,16 @@ Home aliases: `lamp` / `ランプ`, `fan` / `ファン`.
 | Method | Path | Notes |
 |--------|------|-------|
 | GET | `/health` | Liveness (no Meross call) |
-| GET | `/devices` | List toggleable plugs |
-| GET | `/status/lamp` | Status for ランプ |
-| GET/POST | `/toggle/lamp` | Toggle ランプ |
-| GET/POST | `/toggle/fan` | Toggle ファン |
-| GET/POST | `/on/{device}` `/off/{device}` | Explicit on/off |
+| GET | `/devices` | Cached list (no per-device update) |
+| GET | `/status/lamp` | Cached status |
+| GET/POST | `/toggle/lamp` | **202** queued (default, snappy for MCU) |
+| GET/POST | `/toggle/fan` | Same |
+| GET/POST | `/on/{device}` `/off/{device}` | Same async default |
+| GET/POST | `/toggle/lamp?wait=1` | Sync fast path (no rediscovery/update) |
+| GET | `/jobs/{id}` | Poll async job |
 | | `?device=NAME` | Also works without path segment |
+
+Latency note: per-request discovery/`async_update` used to stall ~10–20s when LAN HTTP failed and MQTT timed out. The bridge now reuses one manager, skips those on power, and returns 202 so ESP is not blocked.
 
 Example from the same LAN:
 

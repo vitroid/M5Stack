@@ -144,7 +144,8 @@ bool callBridge(const char* path) {
   Serial.print("GET ");
   Serial.println(url);
 
-  http.setTimeout(15000);
+  // Bridge toggle/on/off returns 202 quickly; allow headroom if ?wait=1 is used.
+  http.setTimeout(20000);
   http.setReuse(false);
   if (!http.begin(wifiClient, url)) {
     Serial.println("http.begin failed");
@@ -159,7 +160,8 @@ bool callBridge(const char* path) {
     Serial.printf("HTTP fail: %s\n", http.errorToString(code).c_str());
   }
   http.end();
-  return code == HTTP_CODE_OK;
+  // 200 OK and 202 Accepted (async queue) both count as success for buttons.
+  return code == HTTP_CODE_OK || code == HTTP_CODE_ACCEPTED;
 }
 
 void setup() {

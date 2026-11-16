@@ -59,4 +59,5 @@ export WIFI_SSID='...' WIFI_PASSWORD='...' BRIDGE_HOST='192.168.x.x'
 pio run -d NodeMCU/MerossRemote -t upload
 ```
 
-Bridge first: see `meross/README.md` (`python -m bridge`, port **8787**).
+Bridge first: see `meross/README.md` (`python -m bridge`, port **8787**).  
+Toggle endpoints return **HTTP 202** quickly (queued); sketch treats 202 as success so buttons stay responsive.
