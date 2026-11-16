@@ -1,8 +1,10 @@
-# MerossRemote (DOIT.AM ESP8266 NodeMCU)
+# MerossRemote (DOIT.AM ESP8266 NodeMCU) — LAN direct
 
-Breadboard remote: two tactile buttons → HTTP → Mac Meross bridge → ランプ / ファン (`mss110`).
+Breadboard remote: two tactile buttons → **signed HTTP POST** → Meross **ランプ** / **ファン** (`mss110`) on the home LAN.
 
-MCU: **ESP8266 NodeMCU** (module text `ESP8266MOD` / `DOIT.AM`) — not ESP32 Amica. Bridge stays on the Mac (`meross/bridge`).
+**No Mac required for day-to-day toggles.** Account `key` + device LAN IP/uuid live in `include/secrets.h` (gitignored). Optional Mac `meross/bridge` is fallback / future key-refresh only.
+
+MCU: **ESP8266 NodeMCU** (module text `ESP8266MOD` / `DOIT.AM`) — not ESP32 Amica.
 
 Flash with **PlatformIO only** (no Arduino IDE).
 
@@ -18,46 +20,37 @@ Bottom-row silk (L→R, photo-confirmed):
 
 - Use `INPUT_PULLUP` — switch other side to **GND**, never 3V3.
 - Do **not** use **D3 / D4 / D8** for buttons (boot / flash / onboard LED).
-- Power the rail from NodeMCU **3V3** / **GND** (or **VIN** if needed).
 
 ## Night-friendly LEDs
 
 Dark-by-default: no idle glow; press flash off unless opted in via `secrets.h`.
 
-| LED | Notes |
-|-----|--------|
-| Blue onboard (usually **D4** / GPIO2, active-low) | Sketch forces OFF |
-| Red power (if present) | Tape if it stays on |
+## One-shot key export (Mac, occasional)
+
+```bash
+cd meross
+source .venv/bin/activate
+set -a && source .env && set +a   # MEROSS_EMAIL / MEROSS_PASSWORD — never commit
+python export_lan_devices.py      # → devices.local.json (gitignored)
+python prove_lan_toggle.py        # optional pure-LAN proof; restores ON
+python gen_nodemcu_secrets.py     # print #define block for secrets.h
+```
+
+Paste the printed `MEROSS_KEY` / `LAMP_*` / `FAN_*` into `include/secrets.h` together with Wi‑Fi.
 
 ## Flash (PlatformIO)
 
-From the sketch directory:
-
 ```bash
 cd NodeMCU/MerossRemote
-cp secrets.h.example include/secrets.h   # edit Wi‑Fi + BRIDGE_HOST; never commit
+cp secrets.h.example include/secrets.h   # then fill Wi‑Fi + LAN macros
 pio run -t upload
 pio device monitor -b 115200
-# or: pio run -t upload -t monitor
 ```
 
-From the repo root:
+Board envs: `nodemcuv2` (default) or `esp12e`.
 
-```bash
-cp NodeMCU/MerossRemote/secrets.h.example NodeMCU/MerossRemote/include/secrets.h
-# edit include/secrets.h
-pio run -d NodeMCU/MerossRemote -t upload
-pio device monitor -d NodeMCU/MerossRemote -b 115200
-```
+Boot log should show `MerossRemote LAN-direct boot`, NTP OK, and `boot lamp/fan on=…` from LAN GET (no SET). Buttons toggle via `POST http://{ip}/config`.
 
-Board envs: `nodemcuv2` (default) or `esp12e` (`pio run -e esp12e -t upload`).
+If a signed request fails, the sketch clears its key-valid flag and hits the Mac refresh stub (currently `/health` only) — re-run `export_lan_devices.py` and update `secrets.h`.
 
-Optional instead of `include/secrets.h` (still no secrets in git):
-
-```bash
-export WIFI_SSID='...' WIFI_PASSWORD='...' BRIDGE_HOST='192.168.x.x'
-pio run -d NodeMCU/MerossRemote -t upload
-```
-
-Bridge first: see `meross/README.md` (`python -m bridge`, port **8787**).  
-Toggle endpoints return **HTTP 202** quickly (queued); sketch treats 202 as success so buttons stay responsive.
+Protocol notes (JP): iot-bot store `docs/meross-lan-direct.md`.
