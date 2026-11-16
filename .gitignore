@@ -1,3 +1,12 @@
 .pio/
 *~
 *.DS_Store
+
+# Meross probe local secrets / venv (never commit credentials)
+meross/.env
+meross/.venv/
+meross/venv/
+meross/__pycache__/
+meross/*.pyc
+meross/*.local.cfg
+meross/local.env
