@@ -23,10 +23,19 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include <WiFiClient.h>
+
+#if __has_include("secrets.h")
 #include "secrets.h"
+#endif
 
 #ifndef WIFI_SSID
-#error "Copy secrets.h.example to secrets.h and set WIFI_SSID / WIFI_PASSWORD / BRIDGE_HOST"
+#error "Copy secrets.h.example → secrets.h, or pass WIFI_SSID / WIFI_PASSWORD / BRIDGE_HOST as env for platformio.ini build_flags"
+#endif
+#ifndef WIFI_PASSWORD
+#error "Set WIFI_PASSWORD (secrets.h or env build_flags)"
+#endif
+#ifndef BRIDGE_HOST
+#error "Set BRIDGE_HOST (secrets.h or env build_flags)"
 #endif
 
 // ---- fixed breadboard pin map (NodeMCU silkscreen) ----

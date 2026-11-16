@@ -14,3 +14,4 @@ meross/local.env
 
 # NodeMCU MerossRemote Wi‑Fi / bridge host (use secrets.h.example)
 NodeMCU/MerossRemote/secrets.h
+NodeMCU/MerossRemote/include/secrets.h

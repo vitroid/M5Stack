@@ -4,6 +4,8 @@ Breadboard remote: two tactile buttons → HTTP → Mac Meross bridge → ラン
 
 MCU: **ESP8266 NodeMCU** (module text `ESP8266MOD` / `DOIT.AM`) — not ESP32 Amica. Bridge stays on the Mac (`meross/bridge`).
 
+Flash with **PlatformIO only** (no Arduino IDE).
+
 ## Wiring (silkscreen)
 
 Bottom-row silk (L→R, photo-confirmed):  
@@ -27,11 +29,34 @@ Dark-by-default: no idle glow; press flash off unless opted in via `secrets.h`.
 | Blue onboard (usually **D4** / GPIO2, active-low) | Sketch forces OFF |
 | Red power (if present) | Tape if it stays on |
 
-## Flash
+## Flash (PlatformIO)
 
-1. Arduino IDE + **esp8266** board package (ESP8266 Community).
-2. Board: **NodeMCU 1.0 (ESP-12E Module)**.
-3. `cp secrets.h.example secrets.h` → Wi‑Fi + Mac bridge IP.
-4. Upload `MerossRemote.ino`. Serial 115200: Wi‑Fi IP + `/health` OK.
+From the sketch directory:
+
+```bash
+cd NodeMCU/MerossRemote
+cp secrets.h.example include/secrets.h   # edit Wi‑Fi + BRIDGE_HOST; never commit
+pio run -t upload
+pio device monitor -b 115200
+# or: pio run -t upload -t monitor
+```
+
+From the repo root:
+
+```bash
+cp NodeMCU/MerossRemote/secrets.h.example NodeMCU/MerossRemote/include/secrets.h
+# edit include/secrets.h
+pio run -d NodeMCU/MerossRemote -t upload
+pio device monitor -d NodeMCU/MerossRemote -b 115200
+```
+
+Board envs: `nodemcuv2` (default) or `esp12e` (`pio run -e esp12e -t upload`).
+
+Optional instead of `include/secrets.h` (still no secrets in git):
+
+```bash
+export WIFI_SSID='...' WIFI_PASSWORD='...' BRIDGE_HOST='192.168.x.x'
+pio run -d NodeMCU/MerossRemote -t upload
+```
 
 Bridge first: see `meross/README.md` (`python -m bridge`, port **8787**).
