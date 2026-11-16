@@ -4,9 +4,9 @@
  * Two momentary buttons (INPUT_PULLUP) call a Mac-side HTTP bridge that
  * wraps meross-iot. MCU holds Wi‑Fi + bridge URL only — no Meross secrets.
  *
- * Pin map (fixed):
- *   Button A (ランプ / lamp) : GPIO 18 → GND
- *   Button B (ファン / fan)  : GPIO 19 → GND
+ * Pin map (fixed; Amica silkscreen D labels):
+ *   Button A (ランプ / lamp) : D18 (GPIO 18) → GND
+ *   Button B (ファン / fan)  : D19 (GPIO 19) → GND
  *
  * Night-friendly (dark-by-default):
  *   - No idle LED. Optional brief flash on press is OFF unless enabled
@@ -27,9 +27,9 @@
 #error "Copy secrets.h.example to secrets.h and set WIFI_SSID / WIFI_PASSWORD / BRIDGE_HOST"
 #endif
 
-// ---- fixed breadboard pin map ----
-static const int PIN_BTN_LAMP = 18;  // A → toggle ランプ
-static const int PIN_BTN_FAN  = 19;  // B → toggle ファン
+// ---- fixed breadboard pin map (silkscreen D18 / D19) ----
+static const int PIN_BTN_LAMP = 18;  // D18 → toggle ランプ
+static const int PIN_BTN_FAN  = 19;  // D19 → toggle ファン
 
 // Common DevKit Amica / NodeMCU-32S status LED (active-low on many boards).
 #ifndef ONBOARD_LED_PIN

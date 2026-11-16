@@ -6,10 +6,12 @@ MCU stays simple (AtomSwitch pattern): Wi‑Fi + `HTTPClient` GET only. Meross c
 
 ## Pin map
 
-| Button | Function | GPIO | Wiring |
-|--------|----------|------|--------|
-| A | toggle **ランプ** (`/toggle/lamp`) | **18** | GPIO18 ↔ switch ↔ GND (`INPUT_PULLUP`) |
-| B | toggle **ファン** (`/toggle/fan`) | **19** | GPIO19 ↔ switch ↔ GND (`INPUT_PULLUP`) |
+Use Amica / DevKit **silkscreen D labels** when wiring (GPIO in parentheses).
+
+| Button | Function | Silkscreen | Wiring |
+|--------|----------|------------|--------|
+| A | toggle **ランプ** (`/toggle/lamp`) | **D18** (GPIO 18) | D18 ↔ switch ↔ GND (`INPUT_PULLUP`) |
+| B | toggle **ファン** (`/toggle/fan`) | **D19** (GPIO 19) | D19 ↔ switch ↔ GND (`INPUT_PULLUP`) |
 
 Also connect Amica **3V3 / 5V / GND** to breadboard power rails as usual. No external pull-ups required.
 
