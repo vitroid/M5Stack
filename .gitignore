@@ -11,6 +11,9 @@ meross/**/__pycache__/
 meross/*.pyc
 meross/*.local.cfg
 meross/local.env
+meross/devices.local.json
+meross/devices.local.*.json
+meross/*.lan.json
 
 # NodeMCU MerossRemote Wi‑Fi / bridge host (use secrets.h.example)
 NodeMCU/MerossRemote/secrets.h
