@@ -1,43 +1,44 @@
 /*
- * MerossRemote — ESP32 DevKit Amica breadboard remote
+ * MerossRemote — DOIT.AM ESP8266 NodeMCU breadboard remote
  *
  * Two momentary buttons (INPUT_PULLUP) call a Mac-side HTTP bridge that
  * wraps meross-iot. MCU holds Wi‑Fi + bridge URL only — no Meross secrets.
  *
- * Pin map (fixed; GPIO numbers — do not invent D18/D19 silk):
- *   Button A (ランプ / lamp) : GPIO 18 → GND
- *   Button B (ファン / fan)  : GPIO 19 → GND
- *   Find pads by number or physical position (see README); confirm silk from photo.
+ * Board (photo-confirmed): ESP8266MOD / DOIT.AM NodeMCU (not ESP32 Amica).
+ * Silkscreen bottom row L→R includes: … D8 D7 D6 D5 GND 3V3 D4 D3 D2 D1 D0
+ *
+ * Pin map (use silkscreen Dx labels):
+ *   Button A (ランプ / lamp) : D1 (GPIO5) → switch → GND
+ *   Button B (ファン / fan)  : D2 (GPIO4) → switch → GND
+ *   Avoid D3 / D4 / D8 for buttons (boot / flash / onboard LED).
  *
  * Night-friendly (dark-by-default):
- *   - No idle LED. Optional brief flash on press is OFF unless enabled
- *     in secrets.h (FEEDBACK_LED_PIN + FLASH_ON_PRESS).
- *   - Onboard blue LED (often GPIO2) is forced OFF at boot.
- *   - Red power LED is hardware-always-on on most Amica boards — cover
- *     with tape or remove/cut its series resistor (see README).
+ *   - No idle LED. Press flash OFF unless enabled in secrets.h.
+ *   - Onboard blue LED is usually D4 / GPIO2 (active-low) — forced OFF.
+ *   - Red power LED (if present) may need tape.
  *
- * Copy secrets.h.example → secrets.h and edit Wi‑Fi / bridge host.
- * Pattern mirrors Atom/AtomSwitch (Wi‑Fi + HTTP GET to a LAN bridge).
+ * Copy secrets.h.example → secrets.h. Arduino board: "NodeMCU 1.0 (ESP-12E)".
  */
 
-#include <WiFi.h>
-#include <HTTPClient.h>
+#include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
+#include <WiFiClient.h>
 #include "secrets.h"
 
 #ifndef WIFI_SSID
 #error "Copy secrets.h.example to secrets.h and set WIFI_SSID / WIFI_PASSWORD / BRIDGE_HOST"
 #endif
 
-// ---- fixed breadboard pin map (GPIO numbers) ----
-static const int PIN_BTN_LAMP = 18;  // GPIO 18 → toggle ランプ
-static const int PIN_BTN_FAN  = 19;  // GPIO 19 → toggle ファン
+// ---- fixed breadboard pin map (NodeMCU silkscreen) ----
+// D1 = GPIO5, D2 = GPIO4 (pins_arduino.h defines D1/D2)
+static const int PIN_BTN_LAMP = D1;  // silk D1 → toggle ランプ
+static const int PIN_BTN_FAN  = D2;  // silk D2 → toggle ファン
 
-// Common DevKit Amica / NodeMCU-32S status LED (active-low on many boards).
+// Onboard blue LED on most NodeMCU: D4 / GPIO2, active-low.
 #ifndef ONBOARD_LED_PIN
-#define ONBOARD_LED_PIN 2
+#define ONBOARD_LED_PIN LED_BUILTIN  // typically 2
 #endif
 
-// Optional press feedback — dark by default (set in secrets.h to enable).
 #ifndef FEEDBACK_LED_PIN
 #define FEEDBACK_LED_PIN (-1)
 #endif
@@ -60,11 +61,12 @@ static const int PIN_BTN_FAN  = 19;  // GPIO 19 → toggle ファン
 #define COOLDOWN_MS 800
 #endif
 
+WiFiClient wifiClient;
 HTTPClient http;
 
 struct Button {
   const char* name;
-  const char* path;  // e.g. "/toggle/lamp"
+  const char* path;
   int pin;
   bool lastStable;
   bool lastRaw;
@@ -78,13 +80,12 @@ Button buttons[] = {
 };
 
 void ledsDark() {
-  // Force common onboard status LED off (GPIO2 is often active-low).
   pinMode(ONBOARD_LED_PIN, OUTPUT);
-  digitalWrite(ONBOARD_LED_PIN, HIGH);  // HIGH = off on typical ESP32 DevKit
+  digitalWrite(ONBOARD_LED_PIN, HIGH);  // active-low LED → HIGH = off
 
   if (FEEDBACK_LED_PIN >= 0) {
     pinMode(FEEDBACK_LED_PIN, OUTPUT);
-    digitalWrite(FEEDBACK_LED_PIN, LOW);  // external LED: off when LOW
+    digitalWrite(FEEDBACK_LED_PIN, LOW);
   }
 }
 
@@ -109,7 +110,7 @@ void connectWifi() {
   while (WiFi.status() != WL_CONNECTED) {
     delay(250);
     Serial.print(".");
-    ledsDark();  // keep dark while waiting (no blink patterns)
+    ledsDark();
     if (millis() - start > 30000) {
       Serial.println("\nWiFi timeout — retrying");
       WiFi.disconnect();
@@ -136,7 +137,7 @@ bool callBridge(const char* path) {
 
   http.setTimeout(15000);
   http.setReuse(false);
-  if (!http.begin(url)) {
+  if (!http.begin(wifiClient, url)) {
     Serial.println("http.begin failed");
     return false;
   }
@@ -155,14 +156,13 @@ bool callBridge(const char* path) {
 void setup() {
   Serial.begin(115200);
   delay(200);
-  Serial.println("MerossRemote (Amica) boot — LEDs dark-by-default");
+  Serial.println("MerossRemote (ESP8266 NodeMCU) boot — LEDs dark-by-default");
 
   ledsDark();
 
   pinMode(PIN_BTN_LAMP, INPUT_PULLUP);
   pinMode(PIN_BTN_FAN, INPUT_PULLUP);
 
-  // Seed debounce from current (idle = HIGH with pull-up).
   for (Button& b : buttons) {
     bool raw = digitalRead(b.pin) == HIGH;
     b.lastRaw = raw;
@@ -171,9 +171,7 @@ void setup() {
   }
 
   connectWifi();
-
-  // Optional readiness ping (does not toggle outlets).
-  callBridge("/health");
+  callBridge("/health");  // readiness only — does not toggle outlets
   ledsDark();
 }
 
@@ -181,7 +179,7 @@ void loop() {
   unsigned long now = millis();
 
   for (Button& b : buttons) {
-    bool raw = digitalRead(b.pin) == HIGH;  // HIGH = released (pull-up)
+    bool raw = digitalRead(b.pin) == HIGH;
     if (raw != b.lastRaw) {
       b.lastRaw = raw;
       b.lastChangeMs = now;
@@ -194,8 +192,7 @@ void loop() {
     }
     b.lastStable = raw;
 
-    // Falling edge: pressed to GND
-    if (!raw) {
+    if (!raw) {  // pressed to GND
       if (now - b.lastFireMs < COOLDOWN_MS) {
         Serial.printf("skip %s (cooldown)\n", b.name);
         continue;

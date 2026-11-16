@@ -12,5 +12,5 @@ meross/*.pyc
 meross/*.local.cfg
 meross/local.env
 
-# Amica MerossRemote Wi‑Fi / bridge host (use secrets.h.example)
-Amica/MerossRemote/secrets.h
+# NodeMCU MerossRemote Wi‑Fi / bridge host (use secrets.h.example)
+NodeMCU/MerossRemote/secrets.h
